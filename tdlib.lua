@@ -242,9 +242,6 @@ classes.DualText = function(pnl, toptext, topfont, topcol, bottomtext, bottomfon
 	centerSpacing = centerSpacing || 0
 
 	pnl:On("Paint", function(s, w, h)
-		surface.SetFont(topfont)
-		local tw, th = surface.GetTextSize(toptext)
-
 		surface.SetFont(bottomfont)
 		local bw, bh = surface.GetTextSize(bottomtext)
 
@@ -571,7 +568,7 @@ classes.ClearPaint = function(pnl)
 end
 
 classes.ReadyTextbox = function(pnl)
-	pnl:SetDrawBackground(false)
+	pnl:SetPaintBackground(false)
 	pnl:SetAppendOverwrite("PaintOver")
 		:SetTransitionFunc(function(s) return s:IsEditing() end)
 end
