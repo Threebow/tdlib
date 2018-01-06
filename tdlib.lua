@@ -39,7 +39,6 @@ local meta = FindMetaTable("Panel")
 
 function meta:On(name, fn)
 	name = self.AppendOverwrite || name
-	print(self, name)
 
 	local old = self[name]
 	
