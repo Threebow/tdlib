@@ -571,7 +571,7 @@ classes.ClearPaint = function(pnl)
 end
 
 classes.ReadyTextbox = function(pnl)
-	pnl:SetDrawBackground(false)
+	pnl:SetPaintBackground(false)
 	pnl:SetAppendOverwrite("PaintOver")
 		:SetTransitionFunc(function(s) return s:IsEditing() end)
 end
