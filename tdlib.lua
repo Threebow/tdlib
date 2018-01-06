@@ -82,7 +82,7 @@ classes.FadeHover = function(pnl, col, speed, rad)
 end
 
 classes.BarHover = function(pnl, col, height, speed)
-	col = col || color_white
+	col = col || Color(255, 255, 255, 255)
 	height = height || 2
 	speed = speed || 6
 
@@ -142,7 +142,7 @@ classes.Background = function(pnl, col, rad, rtl, rtr, rbl, rbr)
 end
 
 classes.Material = function(pnl, mat, col)
-	col = col || color_white
+	col = col || Color(255, 255, 255)
 
 	pnl:On("Paint", function(s, w, h)
 		surface.SetDrawColor(col)
@@ -152,7 +152,7 @@ classes.Material = function(pnl, mat, col)
 end
 
 classes.TiledMaterial = function(pnl, mat, tw, th, col)
-	col = col || color_white
+	col = col || Color(255, 255, 255, 255)
 
 	pnl:On("Paint", function(s, w, h)
 		surface.SetMaterial(mat)
@@ -162,7 +162,7 @@ classes.TiledMaterial = function(pnl, mat, tw, th, col)
 end
 
 classes.Outline = function(pnl, col, width)
-	col = col || color_white
+	col = col || Color(255, 255, 255, 255)
 	width = width || 1
 
 	pnl:On("Paint", function(s, w, h)
@@ -175,7 +175,7 @@ classes.Outline = function(pnl, col, width)
 end
 
 classes.LinedCorners = function(pnl, col, len)
-	col = col || color_white
+	col = col || Color(255, 255, 255, 255)
 	len = len || 15
 
 	pnl:On("Paint", function(s, w, h)
@@ -189,7 +189,7 @@ classes.LinedCorners = function(pnl, col, len)
 end
 
 classes.SideBlock = function(pnl, col, size, side)
-	col = col || color_white
+	col = col || Color(255, 255, 255, 255)
 	size = size || 3
 	side = side || LEFT
 
@@ -210,7 +210,7 @@ end
 
 classes.Text = function(pnl, text, font, col, alignment, ox, oy, paint)
 	font = font || "Trebuchet24"
-	col = col || color_white
+	col = col || Color(255, 255, 255, 255)
 	alignment = alignment || TEXT_ALIGN_CENTER
 	ox = ox || 0
 	oy = oy || 0
@@ -242,6 +242,9 @@ classes.DualText = function(pnl, toptext, topfont, topcol, bottomtext, bottomfon
 	centerSpacing = centerSpacing || 0
 
 	pnl:On("Paint", function(s, w, h)
+		surface.SetFont(topfont)
+		local tw, th = surface.GetTextSize(toptext)
+
 		surface.SetFont(bottomfont)
 		local bw, bh = surface.GetTextSize(bottomtext)
 
@@ -344,7 +347,7 @@ end
 
 classes.CircleCheckbox = function(pnl, inner, outer, speed)
 	inner = inner || Color(0, 255, 0, 255)
-	outer = outer || color_white
+	outer = outer || Color(255, 255, 255, 255)
 	speed = speed || 14
 
 	pnl:SetupTransition("CircleCheckbox", speed, function(s) return s:GetChecked() end)
@@ -568,7 +571,7 @@ classes.ClearPaint = function(pnl)
 end
 
 classes.ReadyTextbox = function(pnl)
-	pnl:SetPaintBackground(false)
+	pnl:SetDrawBackground(false)
 	pnl:SetAppendOverwrite("PaintOver")
 		:SetTransitionFunc(function(s) return s:IsEditing() end)
 end
