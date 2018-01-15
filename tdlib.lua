@@ -482,7 +482,7 @@ classes.SetOpenURL = function(pnl, url)
 end
 
 classes.NetMessage = function(pnl, name, data)
-	fn = fn || function() end
+	data = data || function() end
 
 	pnl:On("DoClick", function()
 		net.Start(name)
