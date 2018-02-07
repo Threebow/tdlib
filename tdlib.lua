@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
-	Three's Derma
+	Three's Derma Lib
 	Made by Threebow
 
 	You are free to use this anywhere you like, or sell any addons
@@ -33,26 +33,26 @@ end
 
 
 /*---------------------------------------------------------------------------
-	Basic helper functions
+	Basic helper classes
 ---------------------------------------------------------------------------*/
-local meta = FindMetaTable("Panel")
+local classes = {}
 
-function meta:On(name, fn)
-	name = self.AppendOverwrite || name
+classes.On = function(pnl, name, fn)
+	name = pnl.AppendOverwrite || name
 
-	local old = self[name]
+	local old = pnl[name]
 	
-	self[name] = function(s, ...)
+	pnl[name] = function(s, ...)
 		if(old) then old(s, ...) end
 		fn(s, ...)
 	end
 end
 
-function meta:SetupTransition(name, speed, fn)
-	fn = self.TransitionFunc || fn
+classes.SetupTransition = function(pnl, name, speed, fn)
+	fn = pnl.TransitionFunc || fn
 
-	self[name] = 0
-	self:On("Think", function(s)
+	pnl[name] = 0
+	pnl:On("Think", function(s)
 		s[name] = Lerp(FrameTime()*speed, s[name], fn(s) && 1 || 0)
 	end)
 end
@@ -61,8 +61,6 @@ end
 /*---------------------------------------------------------------------------
 	Classes
 ---------------------------------------------------------------------------*/
-local classes = {}
-
 classes.FadeHover = function(pnl, col, speed, rad)
 	col = col || Color(255, 255, 255, 30)
 	speed = speed || 6
@@ -577,23 +575,29 @@ end
 
 
 /*---------------------------------------------------------------------------
-	Function used to apply a class to a VGUI element
+	TDLib function which adds all the classes to your panel
 ---------------------------------------------------------------------------*/
-function meta:Class(name, ...)
-	local class = classes[name]
-	assert(class, "Class "..name.." does not exist.")
+local meta = FindMetaTable("Panel")
 
-	class(self, ...)
+function meta:TDLib()
+	self.Class = function(pnl, name, ...)
+		local class = classes[name]
+		assert(class, "[TDLib]: Class "..name.." does not exist.")
+
+		class(pnl, ...)
+
+		return pnl
+	end
+
+	for k, v in pairs(classes) do
+		self[k] = function(s, ...) return s:Class(k, ...) end
+	end
 
 	return self
 end
 
 
-/*---------------------------------------------------------------------------
-	Wrapper for direct classes
----------------------------------------------------------------------------*/
-for k, v in pairs(classes) do
-	meta[k] = function(s, ...)
-		return s:Class(k, ...)
-	end	
+function TDLib(c, p, n)
+	local pnl = vgui.Create(c, p, n)
+	return pnl:TDLib()
 end
