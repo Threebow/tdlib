@@ -17,6 +17,47 @@ local gradDown = Material("vgui/gradient-d")
 
 
 /*---------------------------------------------------------------------------
+	Collection of various utilities
+---------------------------------------------------------------------------*/
+TDLibUtil = {}
+
+//Beast's circle drawing function v2
+TDLibUtil.DrawCircle = function(x, y, r, col)
+    local circle = {}
+
+    for i = 1, 360 do
+        circle[i] = {}
+        circle[i].x = x + math.cos(math.rad(i * 360) / 360) * r
+        circle[i].y = y + math.sin(math.rad(i * 360) / 360) * r
+    end
+
+    surface.SetDrawColor(col)
+    draw.NoTexture()
+    surface.DrawPoly(circle)
+end
+
+TDLibUtil.DrawArc = function(x, y, ang, p, rad, color, seg)
+	seg = seg || 80
+    ang = (-ang) + 180
+    local circle = {}
+
+    table.insert(circle, {x = x, y = y})
+    for i = 0, seg do
+        local a = math.rad((i / seg) * -p + ang)
+        table.insert(circle, {x = x + math.sin(a) * rad, y = y + math.cos(a) * rad})
+    end
+
+    surface.SetDrawColor(color)
+    draw.NoTexture()
+    surface.DrawPoly(circle)
+end
+
+//Various handy premade transition functions
+TDLibUtil.HoverFunc = function(s) return s:IsHovered() end
+TDLibUtil.HoverFuncChild = function(s) return s:IsHovered() || s:IsChildHovered() end
+
+
+/*---------------------------------------------------------------------------
 	Circle function - credit to Beast
 ---------------------------------------------------------------------------*/
 local function drawCircle(x, y, r)
@@ -65,7 +106,7 @@ classes.FadeHover = function(pnl, col, speed, rad)
 	col = col || Color(255, 255, 255, 30)
 	speed = speed || 6
 
-	pnl:SetupTransition("FadeHover", speed, function(s) return s:IsHovered() end)
+	pnl:SetupTransition("FadeHover", speed, TDLibUtil.HoverFunc)
 	pnl:On("Paint", function(s, w, h)
 		local col = ColorAlpha(col, col.a*s.FadeHover)
 
@@ -83,7 +124,7 @@ classes.BarHover = function(pnl, col, height, speed)
 	height = height || 2
 	speed = speed || 6
 
-	pnl:SetupTransition("BarHover", speed, function(s) return s:IsHovered() end)
+	pnl:SetupTransition("BarHover", speed, TDLibUtil.HoverFunc)
 	pnl:On("PaintOver", function(s, w, h)
 		local bar = math.Round(w*s.BarHover)
 
@@ -97,7 +138,7 @@ classes.FillHover = function(pnl, col, dir, speed, mat)
 	dir = dir || LEFT
 	speed = speed || 8
 
-	pnl:SetupTransition("FillHover", speed, function(s) return s:IsHovered() end)
+	pnl:SetupTransition("FillHover", speed, TDLibUtil.HoverFunc)
 	pnl:On("PaintOver", function(s, w, h)
 		surface.SetDrawColor(col)
 
@@ -308,7 +349,7 @@ classes.CircleHover = function(pnl, col, speed, trad)
 
 	pnl.LastX, pnl.LastY = 0, 0
 
-	pnl:SetupTransition("CircleHover", speed, function(s) return s:IsHovered() end)
+	pnl:SetupTransition("CircleHover", speed, TDLibUtil.HoverFunc)
 	pnl:On("Think", function(s)
 		if(s:IsHovered()) then
 			s.LastX, s.LastY = s:CursorPos()
@@ -421,7 +462,7 @@ classes.CircleFadeHover = function(pnl, col, speed)
 	col = col || Color(255, 255, 255, 30)
 	speed = speed || 6
 
-	pnl:SetupTransition("CircleFadeHover", speed, function(s) return s:IsHovered() end)
+	pnl:SetupTransition("CircleFadeHover", speed, TDLibUtil.HoverFunc)
 	pnl:On("Paint", function(s, w, h)
 		draw.NoTexture()
 		surface.SetDrawColor(ColorAlpha(col, col.a*s.CircleFadeHover))
@@ -433,7 +474,7 @@ classes.CircleExpandHover = function(pnl, col, speed)
 	col = col || Color(255, 255, 255, 30)
 	speed = speed || 6
 
-	pnl:SetupTransition("CircleExpandHover", speed, function(s) return s:IsHovered() end)
+	pnl:SetupTransition("CircleExpandHover", speed, TDLibUtil.HoverFunc)
 	pnl:On("Paint", function(s, w, h)
 		local rad = math.Round(w/2*s.CircleExpandHover)
 
@@ -595,7 +636,6 @@ function meta:TDLib()
 
 	return self
 end
-
 
 function TDLib(c, p, n)
 	local pnl = vgui.Create(c, p, n)
