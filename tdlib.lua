@@ -52,6 +52,15 @@ TDLibUtil.DrawArc = function(x, y, ang, p, rad, color, seg)
     surface.DrawPoly(circle)
 end
 
+TDLibUtil.LerpColor = function(frac, from, to)
+	return Color(
+		Lerp(frac, from.r, to.r),
+		Lerp(frac, from.g, to.g),
+		Lerp(frac, from.b, to.b),
+		Lerp(frac, from.a, to.a)
+	)
+end
+
 //Various handy premade transition functions
 TDLibUtil.HoverFunc = function(s) return s:IsHovered() end
 TDLibUtil.HoverFuncChild = function(s) return s:IsHovered() || s:IsChildHovered() end
