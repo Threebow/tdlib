@@ -475,7 +475,7 @@ classes.CircleFadeHover = function(pnl, col, speed)
 	pnl:On("Paint", function(s, w, h)
 		draw.NoTexture()
 		surface.SetDrawColor(ColorAlpha(col, col.a*s.CircleFadeHover))
-		drawCircle(w/2, h/2, w/2)
+		drawCircle(w/2, h/2, math.min(w, h)/2)
 	end)
 end
 
